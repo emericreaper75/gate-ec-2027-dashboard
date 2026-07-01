@@ -1,0 +1,9 @@
+node_modules
+dist
+dist-electron
+out
+.git
+.env.local
+.env
+*.AppImage
+*.deb

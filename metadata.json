@@ -1,0 +1,6 @@
+{
+  "name": "GATE EC 2027 Dashboard",
+  "description": "A high-stakes exam productivity and performance tracking dashboard for GATE EC 2027.",
+  "requestFramePermissions": [],
+  "majorCapabilities": ["MAJOR_CAPABILITY_SERVER_SIDE_GEMINI_API"]
+}

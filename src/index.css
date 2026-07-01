@@ -1,0 +1,65 @@
+@import "tailwindcss";
+@plugin "@tailwindcss/typography";
+
+@theme {
+  --color-bg-primary: #0D0F14;
+  --color-bg-card: #13161D;
+  --color-bg-elevated: #1A1E28;
+  --color-accent-primary: #3B82F6;
+  --color-accent-success: #22C55E;
+  --color-accent-warning: #F59E0B;
+  --color-accent-danger: #EF4444;
+  --color-text-primary: #F1F5F9;
+  --color-text-secondary: #94A3B8;
+  --color-text-muted: #475569;
+  --color-border: #1E2535;
+
+  --font-mono: 'JetBrains Mono', monospace;
+  --font-sans: 'Inter', sans-serif;
+}
+
+@layer utilities {
+  .writing-vertical {
+    writing-mode: vertical-rl;
+    text-orientation: mixed;
+  }
+}
+
+@layer base {
+  html {
+    /* Fluid typography bases */
+    font-size: clamp(14px, 1.2vw + 10px, 16px);
+  }
+
+  body {
+    @apply bg-bg-primary text-text-primary font-sans;
+  }
+  
+  h1 {
+    font-size: clamp(1.5rem, 4vw + 1rem, 2.5rem);
+  }
+  
+  h2 {
+    font-size: clamp(1.25rem, 3vw + 0.5rem, 2rem);
+  }
+  
+  h3 {
+    font-size: clamp(1.125rem, 2vw + 0.5rem, 1.5rem);
+  }
+
+  /* Custom scrollbar for a darker theme */
+  ::-webkit-scrollbar {
+    width: 6px;
+    height: 6px;
+  }
+  ::-webkit-scrollbar-track {
+    background: transparent;
+  }
+  ::-webkit-scrollbar-thumb {
+    background: var(--color-border);
+    border-radius: 3px;
+  }
+  ::-webkit-scrollbar-thumb:hover {
+    background: var(--color-text-muted);
+  }
+}
