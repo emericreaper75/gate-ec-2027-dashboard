@@ -41,7 +41,8 @@
       "category": "Education",
       "icon": "assets/icons",
       "executableName": "gate-ec-dashboard",
-      "syncDesktopName": true
+      "syncDesktopName": true,
+      "executableArgs": ["--no-sandbox"]
     },
     "deb": {
       "appArmorProfile": "build/apparmor-profile",

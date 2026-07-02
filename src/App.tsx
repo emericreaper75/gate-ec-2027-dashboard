@@ -46,8 +46,8 @@ export default function App() {
         stateRef.current.updateSettings({ activeUsageSinceLastBackup: newActiveUsage });
         
         // 4 hours = 4 * 60 * 60 * 1000 = 14400000 ms
-        // Notify user if it's over 4 hours and no syncDirHandle is active
-        if (!syncDirHandle && newActiveUsage >= 14400000) {
+        // Notify user if it's over 4 hours and no syncDirHandle is active (only on web)
+        if (!window.electronAPI && !syncDirHandle && newActiveUsage >= 14400000) {
           toast.warning("No manual save or sync occurred in the last 4 hours of active usage. We recommend exporting a backup from Settings to prevent data loss.", {
             duration: 10000,
           });
@@ -76,6 +76,12 @@ export default function App() {
 
   useEffect(() => {
     const checkDir = async () => {
+      // In native Electron mode, we don't need browser File System API sync
+      if (window.electronAPI) {
+        setDirLoading(false);
+        return;
+      }
+
       const handle = await loadSyncDirectoryHandle();
       if (handle) {
         const hasPermission = await requestDirectoryPermission();

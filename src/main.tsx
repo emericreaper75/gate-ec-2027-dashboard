@@ -4,7 +4,13 @@ import App from './App.tsx';
 import './index.css';
 import { registerSW } from 'virtual:pwa-register';
 
-registerSW({ immediate: true });
+if (!window.electronAPI) {
+  try {
+    registerSW({ immediate: true });
+  } catch (e) {
+    console.error("SW Error:", e);
+  }
+}
 
 createRoot(document.getElementById('root')!).render(
   <StrictMode>

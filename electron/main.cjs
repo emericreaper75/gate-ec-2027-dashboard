@@ -1,4 +1,4 @@
-const { app, BrowserWindow, ipcMain, nativeTheme } = require('electron');
+const { app, BrowserWindow, ipcMain, nativeTheme, protocol, net } = require('electron');
 const path = require('path');
 
 let db = null;
@@ -43,17 +43,44 @@ function createWindow() {
     // Uncomment below to open DevTools automatically in dev mode
     // mainWindow.webContents.openDevTools();
   } else {
-    // Load from built dist file in production
-    mainWindow.loadFile(path.join(__dirname, '../dist/index.html'));
+    // Load from built dist file via custom protocol in production
+    mainWindow.loadURL('app://-/index.html');
   }
 
   // Handle window title
   mainWindow.on('page-title-updated', (event) => {
     event.preventDefault();
   });
+
+  // Pipe console messages to stdout for debugging
+  mainWindow.webContents.on('console-message', (event, level, message, line, sourceId) => {
+    console.log(`[Renderer] ${message}`);
+  });
+
+  mainWindow.webContents.on('did-fail-load', (event, errorCode, errorDescription) => {
+    console.error(`[Renderer] Failed to load: ${errorDescription} (${errorCode})`);
+  });
+
+  mainWindow.webContents.on('render-process-gone', (event, details) => {
+    console.error(`[Renderer] Process gone: ${details.reason}`);
+  });
 }
 
+// Register the app:// protocol as privileged before app is ready
+protocol.registerSchemesAsPrivileged([
+  { scheme: 'app', privileges: { secure: true, standard: true, supportFetchAPI: true, corsEnabled: true } }
+]);
+
 app.whenReady().then(() => {
+  // Setup the custom protocol handler
+  protocol.handle('app', (request) => {
+    let urlPath = request.url.slice('app://-/'.length);
+    if (!urlPath || urlPath === '/') urlPath = 'index.html';
+    
+    const filePath = path.join(__dirname, '../dist', urlPath);
+    return net.fetch('file://' + filePath);
+  });
+
   // Initialize the database
   initDatabase();
 
